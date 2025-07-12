@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Tổng quan";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Đơn đặt hàng -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info" style="min-height: 140px;">
+                    <div class="inner">
+                        <h4>Chờ: @ViewBag.PendingOrder<br />✔️ Giao: @ViewBag.CompletedOrder</h4>
+                        <p>Đơn đặt hàng</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doanh thu -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning" style="min-height: 140px;">
+                    <div class="inner">
+                        <h4>@ViewBag.TotalMoney.ToString("#,##")₫</h4>
+                        <p>Đã bán: @ViewBag.TotalSoldProducts sản phẩm</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khách hàng -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success" style="min-height: 140px;">
+                    <div class="inner">
+                        <h4>@ViewBag.TotalClient KH</h4>
+                        <p>✔️ Đã xác minh: @ViewBag.VerifiedClient<br />❌ Chưa xác minh: @ViewBag.UnverifiedClient</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sản phẩm -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger" style="min-height: 140px;">
+                    <div class="inner">
+                        <h4>@ViewBag.TotalProduct</h4>
+                        <p>Sản phẩm</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->

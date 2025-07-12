@@ -1,0 +1,383 @@
+﻿<!--A Design by W3layouts
+Author: W3layout
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+@using CosmeticsShop.Models
+@{
+    var categories = ViewBag.ListCategory as List<Category> ?? new List<Category>(); // fallback an toàn
+}
+<!DOCTYPE html>+
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/bootstrap-3.1.1.min.css" rel='stylesheet' type='text/css' />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Content/js/jquery.min.js"></script>
+    <!-- Custom Theme files -->
+    <!--theme-style-->
+    <link href="~/Content/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!--//theme-style-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="@ViewBag.Title" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <link href='//fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+    <!-- start menu -->
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <!-- slide -->
+    <!-- animation-effect -->
+    <link href="~/Content/css/animate.min.css" rel="stylesheet">
+    <script src="~/Content/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <!-- //animation-effect -->
+    <style>
+        .dropdown-menu {
+            left: auto !important;
+            right: 0 !important;
+            top: 100% !important;
+            margin-top: 5px;
+            min-width: 180px;
+        }
+
+        body {
+            padding-top: 100px;
+        }
+
+        .header {
+            position: fixed;
+            width: 100%;
+            height: 130px;
+            top: 0;
+            z-index: 9999;
+            background-color: #fff;
+            box-shadow: none !important;
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+ 
+    </style>
+    <div class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-row d-flex justify-content-between align-items-center" style="display: flex; flex-wrap: nowrap; align-items: center; height: 100px;">
+
+                    <!-- Logo -->
+                    <div style="flex: 1;">
+                        <h2 style="margin: 0; font-size: 28px; font-weight: bold;">
+                            <a href="@Url.Action("Index", "Home")" class="text-uppercase" style="text-decoration: none;">
+                                <span style="color: #ff69b4;">COSMETICS</span>
+                                <span style="color: #444444;">SHOP</span>
+                            </a>
+                        </h2>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div style="flex: 3;">
+                        <form action="/Product/Index" method="get" class="navbar-form" role="search">
+                            <div class="input-group input-group-lg" style="width: 100%;">
+                                <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm..." style="height: 45px;">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit" style="height: 45px;"><i class="glyphicon glyphicon-search"></i></button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div style="flex: 1;">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle btn-block" type="button" id="categoryDropdown" data-toggle="dropdown">
+                                <i class="glyphicon glyphicon-list"></i> Danh mục <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                                @foreach (var item in categories)
+                                {
+                                    <li><a href="/Product/Index?CategoryID=@item.ID">@item.Name</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Giỏ hàng -->
+                    <div style="flex: 1; text-align: center;">
+                        <a href="/Cart/Checkout">
+                            <h4 style="margin: 0;">
+                                @{
+                                    var itemCarts = Session["Cart"] as List<CosmeticsShop.Models.ItemCart>;
+                                    var total = itemCarts?.Sum(x => x.ProductPrice * x.Quantity) ?? 0;
+                                    var quantity = itemCarts?.Sum(x => x.Quantity) ?? 0;
+                                }
+                                <span class="simpleCart_total">@total.ToString("#,##")₫ (@quantity)</span>
+                                <img src="~/Content/images/cart.png" alt="Cart" style="max-height: 45px; margin-left: 5px;" />
+                            </h4>
+                        </a>
+                    </div>
+
+                    <!-- Bảo hành -->
+                    <div style="flex: 0 0 60px; text-align: center;">
+                        <a href="/Warranty" class="btn btn-warning" style="width: 100%; height: 30px;">
+                            Bảo hành
+                        </a>
+                    </div>
+
+                    <!-- User -->
+                    <div style="flex: 1; text-align: center;">
+                        @{
+                            var user = Session["User"] as CosmeticsShop.Models.User;
+                            if (user != null)
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown">
+                                        <i class="glyphicon glyphicon-user"></i> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                        <li><a href="/User/CheckoutOrder">Quản lý đơn hàng</a></li>
+                                        <li><a href="/User/Profile">Thông tin cá nhân</a></li>
+                                        <li><a href="/User/Favorites">Danh sách yêu thích</a></li>
+                                        <li><a href="/Home/SignOut">Đăng xuất</a></li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <a class="btn btn-sm" href="/Home/SignIn" style="background-color: hotpink; border-color: hotpink; color: white;">Đăng nhập</a>
+                                    <a class="btn btn-default btn-sm" href="/Home/SignUp">Đăng ký</a>
+                                 </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</head>
+
+
+<body>
+
+    <!--header-->
+   
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+
+    <div class="row">
+        <div class="chatbox chatbox22 chatbox--tray">
+            <div class="chatbox__title">
+                <h5><a href="javascript:void()">Chat với chúng tôi</a></h5>
+                <!--<button class="chatbox__title__tray">
+                    <span></span>
+                </button>-->
+                <button class="chatbox__title__close">
+                    <span>
+                        <svg viewBox="0 0 12 12" width="12px" height="12px">
+                            <line stroke="#FFFFFF" x1="11.75" y1="0.25" x2="0.25" y2="11.75"></line>
+                            <line stroke="#FFFFFF" x1="11.75" y1="11.75" x2="0.25" y2="0.25"></line>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            @if (Session["User"] == null)
+            {
+                <div class="chatbox__body">
+                    <h5>Vui lòng đăng nhập để chat</h5>
+                </div>
+            }
+            else
+            {
+                <div class="chatbox__body">
+
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" required class="form-control input-sm chat_set_height" placeholder="Soạn tin nhắn..." tabindex="0" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" contenteditable="true" />
+                        <span class="input-group-btn">
+                            <button class="btn bt_bg btn-sm" id="btn-chat">
+                                Gửi
+                            </button>
+                            <img src="~/Content/images/loading.gif" class="loading-send btn bt_bg btn-sm" style="display:none;" />
+                        </span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!--footer-->
+    <div class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="col-md-6 top-footer">
+                    <h3>Follow Us On</h3>
+                    <div class="social-icons">
+                        <ul class="social">
+                            <li><a href="#"><i></i></a> </li>
+                            <li><a href="#"><i class="facebook"></i></a></li>
+                            <li><a href="#"><i class="google"></i> </a></li>
+                            <li><a href="#"><i class="linked"></i> </a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="col-md-6 top-footer1">
+                    <h3>Newsletter</h3>
+                    <form action="#" method="post">
+                        <input type="text" name="email" value="" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='';}">
+                        <input type="submit" value="SUBSCRIBE">
+                    </form>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                var chat = $.connection.chatHubs
+                chat.client.displayMessage = function () {
+                    getAllData();
+                }
+                $.connection.hub.start();
+                getAllData();
+            })
+            var lastMessID = 0;
+            function getAllData() {
+                var chatbox = $('.chatbox__body');
+                var userID = $('#UserID').val();
+                $.ajax({
+                    url: location.origin + "/Chat/GetAllMessageChating?UserID=" + userID,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        chatbox.empty()
+                        if (data.length > 0) {
+                            $.each(data, function (i, model) {
+                                var date = new Date(parseInt(model.CreatedDate.substr(6)));
+                                if (model.FromUserID == userID) {
+                                    lastMessID = model.ID;
+                                    chatbox.append(
+                                        '<div class="chatbox__body__message chatbox__body__message--right" id="' + model.ID + '"' + '>' +
+                                        ' <div class="chatbox_timing">' +
+                                        '<ul>' +
+                                        '<li>' + date.getHours() + ':' + date.getMinutes() + '</li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '<img src="/Content/images/' + model.FromAvatarUser + '" alt="Picture">' +
+                                        '<div class="clearfix"></div>' +
+                                        ' <div class="ul_section_full">' +
+                                        ' <ul class="ul_msg">' +
+                                        '<li><strong>' + model.FromUserName + '</strong></li>' +
+                                        '<li>' + model.Content + '</li>' +
+                                        '</ul>' +
+                                        '<div class="clearfix"></div>' +
+                                        '</div>' +
+                                        '</div>'
+                                    );
+                                } else {
+                                    chatbox.append(
+                                        '<div class="chatbox__body__message chatbox__body__message--left" id="' + model.ID + '"' + '>' +
+                                        ' <div class="chatbox_timing">' +
+                                        '<ul>' +
+                                        '<li>' + date.getHours() + ':' + date.getMinutes() + '</li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '<img src="/Content/images/' + model.FromAvatarUser + '" alt="Picture">' +
+                                        '<div class="clearfix"></div>' +
+                                        ' <div class="ul_section_full">' +
+                                        ' <ul class="ul_msg">' +
+                                        '<li><strong>' + model.FromUserName + '</strong></li>' +
+                                        '<li>' + model.Content + '</li>' +
+                                        '</ul>' +
+                                        '<div class="clearfix"></div>' +
+                                        '</div>' +
+                                        '</div>'
+                                    );
+                                }
+                            })
+                        } else {
+                            chatbox.append(
+                                '<p>Chưa có tin nhắn...</p>'
+                            );
+                        }
+                    }
+                })
+                $(".chatbox__body").animate({ scrollTop: 2000000 });
+            }
+            function getLastData() {
+                var chatbox = $('.chatbox__body');
+                var userID = $('#UserID').val();
+                $.ajax({
+                    url: location.origin + "/Chat/GetLastMessageClient?UserID=" + userID,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        var date = new Date(parseInt(data.CreatedDate.substr(6)));
+                        chatbox.append(
+                            '<div class="chatbox__body__message chatbox__body__message--right">' +
+                            ' <div class="chatbox_timing">' +
+                            '<ul>' +
+                            '<li>' + date.getHours() + ':' + date.getMinutes() + '</li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<img src="/Content/images/' + data.FromAvatarUser + '" alt="Picture">' +
+                            '<div class="clearfix"></div>' +
+                            ' <div class="ul_section_full">' +
+                            ' <ul class="ul_msg">' +
+                            '<li><strong>' + data.FromUserName + '</strong></li>' +
+                            '<li>' + data.Content + '</li>' +
+                            '</ul>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</div>')
+                    }
+                })
+            }
+            $('#btn-chat').click(function send() {
+                var fromId = $('#UserID').val();
+                var content = $('#btn-input').val();
+                $.ajax({
+                    url: location.origin + "/Chat/Send",
+                    data: { FromUserID: fromId, ToUserID: 1, Content: content, Side: "Client" },
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (data.status) {
+                            $.notify("Đã gửi!", "success");
+                            $("#btn-chat").show();
+                            $(".loading-send").hide();
+                            getLastData();
+                            $('#btn-input').val("");
+                            $(".chatbox__body").animate({ scrollTop: 2000000 });
+                        } else {
+                            $.notify("Có lỗi xảy ra!", "error");
+                            return;
+                        }
+                    }
+                })
+                $("#btn-chat").hide();
+                $(".loading-send").show();
+            })
+        });
+    </script>
+
+    <script src="~/Content/js/notify.min.js"></script>
+
+    <script src="~/Scripts/jquery.signalR-2.4.2.min.js"></script>
+    <script src="~/signalr/hubs" type="text/javascript"></script>
+    <link href="~/Content/css/chatbox.css" rel="stylesheet" />
+    <script src="~/Content/js/chatbox.js"></script>
+</body>
+</html>
