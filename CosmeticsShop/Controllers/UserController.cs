@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace CosmeticsShop.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         ShoppingEntities db = new ShoppingEntities();
         public bool CheckRole(string type)
@@ -122,6 +122,39 @@ namespace CosmeticsShop.Controllers
                 db.SaveChanges();
             }
             return RedirectToAction("CheckoutOrder");
+        }
+        [HttpPost]
+        public JsonResult ToggleWishlist(int productId)
+        {
+            User user = Session["User"] as User;
+            if (user == null)
+                return Json(new { success = false, message = "Vui lòng đăng nhập" });
+
+            var item = db.Wishlists.FirstOrDefault(w => w.UserID == user.ID && w.ProductID == productId);
+            if (item != null)
+            {
+                db.Wishlists.Remove(item); 
+                db.SaveChanges();
+                return Json(new { success = true, status = "removed" });
+            }
+            else
+            {
+                db.Wishlists.Add(new Wishlist { UserID = user.ID, ProductID = productId, CreatedDate = DateTime.Now });
+                db.SaveChanges();
+                return Json(new { success = true, status = "added" });
+            }
+        }
+        public ActionResult Wishlist()
+        {
+            var products = db.Products.Where(p => p.IsActive == true).ToList();
+
+            var user = Session["User"] as User;
+            if (user != null)
+            {
+                ViewBag.Wishlist = db.Wishlists.Where(w => w.UserID == user.ID).Select(w => w.ProductID).ToList();
+            }
+
+            return View(products);
         }
     }
 }

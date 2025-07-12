@@ -32,5 +32,7 @@ namespace CosmeticsShop.Models
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
+        public virtual DbSet<ProductReview> ProductReviews { get; set; }
+        public virtual DbSet<Wishlist> Wishlists { get; set; }
     }
 }

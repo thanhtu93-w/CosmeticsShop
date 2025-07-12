@@ -79,6 +79,9 @@
                                     <h5 class="item_price">@products[i].Price.Value.ToString("#,##")₫</h5>
                                     <p class="item_price">Đã bán: @products[i].PurchasedCount (Còn lại @products[i].Quantity)</p>
                                     <a href="#" class="item_add" data-id="@products[i].ID">Chọn mua</a>
+                                    <a href="#" class="btn-heart" data-product-id="@products[i].ID" title="Yêu thích">
+                                        <i class="fa @(ViewBag.WishlistProductIDs != null && ((List<int>)ViewBag.WishlistProductIDs).Contains(products[i].ID) ? "fa-heart text-danger" : "fa-heart-o text-dark")"></i>
+                                    </a>
                                     <div class="clearfix"> </div>
                                 </div>
                             </div>

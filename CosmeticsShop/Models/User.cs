@@ -21,6 +21,8 @@ namespace CosmeticsShop.Models
             this.Messages1 = new HashSet<Message>();
             this.Orders = new HashSet<Order>();
             this.Products = new HashSet<Product>();
+            this.ProductReviews = new HashSet<ProductReview>();
+            this.Wishlists = new HashSet<Wishlist>();
         }
     
         public int ID { get; set; }
@@ -43,5 +45,9 @@ namespace CosmeticsShop.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }
         public virtual UserType UserType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductReview> ProductReviews { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Wishlist> Wishlists { get; set; }
     }
 }
