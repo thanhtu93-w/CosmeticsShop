@@ -4,9 +4,34 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 
     List<CosmeticsShop.Models.ItemCart> itemCarts = Session["Cart"] as List<CosmeticsShop.Models.ItemCart>;
+    List<CosmeticsShop.Models.Product> products = ViewBag.ListProduct as List<CosmeticsShop.Models.Product>;
+    List<int> wishlist = ViewBag.Wishlist as List<int> ?? new List<int>();
 }
 <script>
     $(document).ready(function () {
+        $(".btn-remove").click(function (e) {
+            e.preventDefault();
+            if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?")) return;
+
+            var button = $(this);
+            var productId = button.data("id");
+
+            $.ajax({
+                url: "/Cart/RemoveItem",
+                type: "POST",
+                data: { ProductID: productId },
+                success: function (res) {
+                    if (res.success) {
+                        $.notify("Đã xóa sản phẩm khỏi giỏ hàng!", "success");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        $.notify("Lỗi khi xóa!", "error");
+                    }
+                }
+            });
+        });
         $('.qty').on('keydown', function (e) {
             e.preventDefault();
         });
@@ -103,15 +128,19 @@
                     <tr>
                         <td class="ring-in">
                             <a href="/Product/Details/@item.ProductID" class="at-in"><img src="~/Content/images/@item.ProductImage" class="img-responsive" alt=""></a>
-                            <div class="sed">
-                                <h5>@item.ProductName</h5>
-                            </div>
+                            <div class="sed"><h5>@item.ProductName</h5></div>
                             <div class="clearfix"> </div>
                         </td>
                         <td class="check"><input type="number" class="qty" data-id="@item.ProductID" value="@item.Quantity" style="width:100px" min="0"></td>
                         <td>@item.ProductPrice.ToString("#,##")₫</td>
                         <td id="@item.ProductID">@((item.ProductPrice * item.Quantity).ToString("#,##"))₫</td>
+                        <td>
+                            <button class="btn btn-danger btn-remove" data-id="@item.ProductID" style="padding: 3px 8px;">
+                                <i class="fa fa-trash"></i> Xóa
+                            </button>
+                        </td>
                     </tr>
+
                 }
                 <tr>
                     <th class="total-cart">Tổng: @itemCarts.Sum(x => x.Quantity * x.ProductPrice).ToString("#,##")₫</th>

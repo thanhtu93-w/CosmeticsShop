@@ -26,7 +26,13 @@ ul {
     padding: 0;
     margin: 0;
 }
+.btn-heart i {
+    color: black; /* tr?ng thái chýa thích */
+}
 
+    .btn-heart i.liked {
+        color: red; /* tr?ng thái ð? thích */
+    }
 h1, h2, h3, h4, h5, h6, label, p {
     margin: 0;
 }

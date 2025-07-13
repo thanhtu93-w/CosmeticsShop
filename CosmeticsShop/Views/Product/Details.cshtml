@@ -1,7 +1,8 @@
 ﻿@model CosmeticsShop.Models.Product
 @{
     ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    List<CosmeticsShop.Models.Product> products = ViewBag.ListProduct as List<CosmeticsShop.Models.Product>;
 
     List<CosmeticsShop.Models.Category> categories = ViewBag.ListCategory as List<CosmeticsShop.Models.Category>;
 }
@@ -76,18 +77,24 @@
                     <h2>@Model.Name</h2>
                     <p> @Model.Description</p>
                     <div class="star-on">
-                        @*<ul>
-                                <li><a href="#"><i class="glyphicon glyphicon-star"> </i></a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-star"> </i></a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-star"> </i></a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-star"> </i></a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-star"> </i></a></li>
-                            </ul>
-                            <div class="review">
-                                <a href="#"> 3 reviews </a>/
-                                <a href="#">  Write a review</a>
-                            </div>*@
-                        <div class="clearfix"> </div>
+                        <ul>
+                            @{
+                                int fullStars = (int)Math.Floor((double)ViewBag.AvgRating);
+                                for (int i = 0; i < fullStars; i++)
+                                {
+                                    <li><i class="glyphicon glyphicon-star text-warning"></i></li>
+                                }
+                                for (int i = fullStars; i < 5; i++)
+                                {
+                                    <li><i class="glyphicon glyphicon-star-empty text-warning"></i></li>
+                                }
+                            }
+                        </ul>
+                        <div class="review">
+                            <a href="#">@ViewBag.TotalReview đánh giá</a>
+                        </div>
+                        <div class="clearfix"></div>
+
                     </div>
                     <label class="add-to item_price">@Model.Price.Value.ToString("#,##")₫</label>
                     <a href="#" class="cart item_add" data-id="@Model.ID">Chọn mua</a>
@@ -98,3 +105,38 @@
         </div>
     </div>
 </div>
+@if (((List<CosmeticsShop.Models.ProductReview>)ViewBag.Reviews).Count > 0)
+{
+    <div class="container" style="margin-top: 30px;">
+        <h3>Đánh giá sản phẩm</h3>
+        <hr />
+        @foreach (var review in (List<CosmeticsShop.Models.ProductReview>)ViewBag.Reviews)
+        {
+            <div class="panel panel-default" style="margin-bottom: 15px;">
+                <div class="panel-heading">
+                    <strong>@review.User.Name</strong> -
+                    @{
+                        for (int i = 0; i < review.Rating; i++)
+                        {
+                            <i class="glyphicon glyphicon-star text-warning"></i>
+                        }
+                        for (int i = (int)review.Rating; i < 5; i++)
+                        {
+                            <i class="glyphicon glyphicon-star-empty text-warning"></i>
+                        }
+                    }
+                    <span class="pull-right">@review.CreatedDate.Value.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="panel-body">
+                    @Html.Raw(HttpUtility.HtmlEncode(review.Comment))
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="container" style="margin-top: 30px;">
+        <h4>Chưa có đánh giá nào cho sản phẩm này.</h4>
+    </div>
+}

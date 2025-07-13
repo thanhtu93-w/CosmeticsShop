@@ -1,0 +1,88 @@
+﻿@model List<CosmeticsShop.Models.Product>
+
+@{
+    ViewBag.Title = "Danh sách yêu thích";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    var wishlist = ViewBag.WishlistProductIDs as List<int> ?? new List<int>();
+    List<CosmeticsShop.Models.Product> products = ViewBag.ListProduct as List<CosmeticsShop.Models.Product>;
+}
+
+<div class="breadcrumbs" style="height: 130px; display: flex; align-items: center;">
+    <div class="container">
+        <ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+            <li><a href="/"><span class="glyphicon glyphicon-home"></span>Trang chủ</a></li>
+            <li class="active">Danh sách yêu thích</li>
+        </ol>
+    </div>
+</div>
+
+<div class="products">
+    <div class="container">
+        <h2>Danh sách yêu thích</h2>
+
+        @if (Model.Count > 0)
+        {
+            <div class="content-top1">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var p = Model[i];
+                    <div class="col-md-4 col-md4">
+                        <div class="col-md1 simpleCart_shelfItem">
+                            <a href="/Product/Details/@p.ID">
+                                <img class="img-responsive" src="~/Content/images/@p.Image1" alt="" style="height:250px;width:200px" />
+                            </a>
+                            <h3><a href="/Product/Details/@p.ID">@p.Name</a></h3>
+                            <div class="price">
+                                <h5 class="item_price">@p.Price.Value.ToString("#,##")₫</h5>
+                                <p class="item_price">Đã bán: @p.PurchasedCount (Còn lại @p.Quantity)</p>
+                                <a href="#" class="item_add" data-id="@p.ID">Chọn mua</a>
+                                <button class="btn-heart" data-product-id="@p.ID">
+                                    <i class="@(wishlist.Contains(p.ID) ? "fas fa-heart text-danger" : "far fa-heart text-dark")"></i>
+                                </button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    if ((i + 1) % 3 == 0)
+                    {
+                        <div class="clearfix"></div>
+                    }
+                }
+
+                <div class="clearfix"></div>
+            </div>
+        }
+        else
+        {
+            <h4>Không có sản phẩm nào trong danh sách yêu thích.</h4>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(".btn-heart").click(function (e) {
+            e.preventDefault();
+            var button = $(this);
+            var icon = button.find("i");
+            var productId = button.data("product-id");
+
+            $.ajax({
+                url: "/User/ToggleWishlist",
+                type: "POST",
+                data: { productId: productId },
+                success: function (res) {
+                    if (res.success) {
+                        if (res.status === "removed") {
+                            icon.removeClass("fas fa-heart text-danger").addClass("far fa-heart text-dark");
+                        } else {
+                            icon.removeClass("far fa-heart text-dark").addClass("fas fa-heart text-danger");
+                        }
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -34,8 +34,19 @@ namespace CosmeticsShop.Controllers
         }
         public ActionResult Details(int ID)
         {
-            Product product = db.Products.Find(ID);
+            var product = db.Products.Find(ID);
+            if (product == null) return HttpNotFound();
+
+            var reviews = db.ProductReviews.Where(r => r.ProductID == ID).ToList();
+            ViewBag.Reviews = reviews;
+            ViewBag.ListCategory = db.Categories.Where(x => x.IsActive == true).ToList();
+
+            double avgRating = reviews.Count > 0 ? reviews.Average(r => r.Rating ?? 0) : 0;
+            ViewBag.AvgRating = avgRating;
+            ViewBag.TotalReview = reviews.Count;
+
             return View(product);
         }
+
     }
 }

@@ -20,12 +20,13 @@
         <AssociationConnector Association="ShoppingModel.FK__Orders__UserID__267ABA7A" />
         <AssociationConnector Association="ShoppingModel.FK__Products__Create__276EDEB3" />
         <AssociationConnector Association="ShoppingModel.FK__Users__UserTypeI__286302EC" />
-        <EntityTypeShape EntityType="ShoppingModel.ProductReview" Width="1.5" PointX="10.5" PointY="7.125" />
+        <EntityTypeShape EntityType="ShoppingModel.ProductReview" Width="1.5" PointX="10.5" PointY="7.25" />
         <EntityTypeShape EntityType="ShoppingModel.Wishlist" Width="1.5" PointX="13.5" PointY="7.5" />
         <AssociationConnector Association="ShoppingModel.FK_ProductReview_Product" />
         <AssociationConnector Association="ShoppingModel.FK_ProductReview_User" />
         <AssociationConnector Association="ShoppingModel.FK_Wishlist_Product" />
         <AssociationConnector Association="ShoppingModel.FK_Wishlist_User" />
+        <AssociationConnector Association="ShoppingModel.FK_ProductReviews_Orders" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

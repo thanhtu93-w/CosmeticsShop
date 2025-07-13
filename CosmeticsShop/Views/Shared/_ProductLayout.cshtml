@@ -24,7 +24,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <link href='//fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
     <!-- start menu -->
     <script src="~/Content/js/bootstrap.min.js"></script>
-    <!-- slide -->
+
+    <!--  heart Wishlist -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <!--header-->
@@ -354,13 +356,40 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <link rel="stylesheet" href="~/Content/css/flexslider.css" type="text/css" media="screen" />
 
     <script>
-        // Can also be used with $(document).ready()
-        $(window).load(function () {
-            $('.flexslider').flexslider({
-                animation: "slide",
-                controlNav: "thumbnails"
+        $(document).ready(function () {
+            $(".btn-heart").click(function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var icon = button.find("i");
+                var productId = button.data("product-id");
+
+                $.ajax({
+                    url: "/User/ToggleWishlist",
+                    type: "POST",
+                    data: { productId: productId },
+                    success: function (res) {
+                        if (res.success) {
+                            if (res.status === "added") {
+                                icon.removeClass("far fa-heart text-dark").addClass("fas fa-heart text-danger");
+                            } else {
+                                icon.removeClass("fas fa-heart text-danger").addClass("far fa-heart text-dark");
+                            }
+                        } else {
+                            alert(res.message);
+                        }
+                    }
+                });
             });
         });
+
+        <script>
+            // Can also be used with $(document).ready()
+            $(window).load(function () {
+                $('.flexslider').flexslider({
+                    animation: "slide",
+                    controlNav: "thumbnails"
+                });
+            });
     </script>
     <!---pop-up-box---->
     <link href="~/Content/css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />

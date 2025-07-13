@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 
     List<CosmeticsShop.Models.Product> products = ViewBag.ListProduct as List<CosmeticsShop.Models.Product>;
+    List<int> wishlist = ViewBag.Wishlist as List<int> ?? new List<int>();
 }
 <script>
     $(document).ready(function () {
@@ -58,10 +59,13 @@
                                 <div class="price">
                                     <h5 class="item_price">@products[i].Price.Value.ToString("#,##")₫</h5>
                                     <p class="item_price">Đã bán: @products[i].PurchasedCount (Còn lại @products[i].Quantity)</p>
-                                    <a href="#" class="item_add" data-id="@products[i].ID">Chọn mua</a>
-                                    <button class="btn-heart" data-product-id="@products[i].ID">
-                                        <i class="fa @(ViewBag.Wishlist != null && ((List<int>)ViewBag.Wishlist).Contains(products[i].ID) ? "fa-heart text-danger" : "fa-heart-o text-dark")"></i>
-                                    </button>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <a href="#" class="item_add" data-id="@products[i].ID">Chọn mua</a>
+                                        <button class="btn-heart" data-product-id="@products[i].ID">
+                                            <i class="@(wishlist.Contains(products[i].ID) ? "fas fa-heart text-danger" : "far fa-heart text-dark")"></i>
+
+                                        </button>
+                                    </div>
                                     <div class="clearfix"> </div>
                                 </div>
                             </div>

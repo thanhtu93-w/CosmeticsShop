@@ -58,6 +58,7 @@
           <Property Name="Comment" Type="nvarchar" MaxLength="1000" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="IsApproved" Type="bit" />
+          <Property Name="OrderID" Type="int" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -228,6 +229,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductReviews_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="ProductReviews" Type="Self.ProductReviews" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductReviews">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Wishlist_Product">
           <End Role="Products" Type="Self.Products" Multiplicity="1" />
           <End Role="Wishlist" Type="Self.Wishlist" Multiplicity="*" />
@@ -302,6 +315,10 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="ProductReviews" EntitySet="ProductReviews" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductReviews_Orders" Association="Self.FK_ProductReviews_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="ProductReviews" EntitySet="ProductReviews" />
+          </AssociationSet>
           <AssociationSet Name="FK_Wishlist_Product" Association="Self.FK_Wishlist_Product">
             <End Role="Products" EntitySet="Products" />
             <End Role="Wishlist" EntitySet="Wishlist" />
@@ -373,6 +390,10 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Wishlist" EntitySet="Wishlists" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductReviews_Orders" Association="ShoppingModel.FK_ProductReviews_Orders">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="ProductReview" EntitySet="ProductReviews" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -422,6 +443,7 @@
           <Property Name="IsPaid" Type="Boolean" />
           <NavigationProperty Name="OrderDetails" Relationship="ShoppingModel.FK__OrderDeta__Order__25869641" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="User" Relationship="ShoppingModel.FK__Orders__UserID__267ABA7A" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="ProductReviews" Relationship="ShoppingModel.FK_ProductReviews_Orders" FromRole="Order" ToRole="ProductReview" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -585,6 +607,8 @@
           <Property Name="IsApproved" Type="Boolean" />
           <NavigationProperty Name="Product" Relationship="ShoppingModel.FK_ProductReview_Product" FromRole="ProductReview" ToRole="Product" />
           <NavigationProperty Name="User" Relationship="ShoppingModel.FK_ProductReview_User" FromRole="ProductReview" ToRole="User" />
+          <Property Name="OrderID" Type="Int32" />
+          <NavigationProperty Name="Order" Relationship="ShoppingModel.FK_ProductReviews_Orders" FromRole="ProductReview" ToRole="Order" />
         </EntityType>
         <EntityType Name="Wishlist">
           <Key>
@@ -642,6 +666,18 @@
             </Principal>
             <Dependent Role="Wishlist">
               <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductReviews_Orders">
+          <End Type="ShoppingModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="ShoppingModel.ProductReview" Role="ProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductReview">
+              <PropertyRef Name="OrderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -743,6 +779,7 @@
           <EntitySetMapping Name="ProductReviews">
             <EntityTypeMapping TypeName="ShoppingModel.ProductReview">
               <MappingFragment StoreEntitySet="ProductReviews">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />

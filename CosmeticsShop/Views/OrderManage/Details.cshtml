@@ -50,10 +50,14 @@
                         }
                     </tbody>
                 </table>
-                @if (!ViewBag.IsProcessed)
-                {
-                    <a href="/OrderManage/Processed/@Request.Params["ID"]" class="btn btn-primary float-right">Duyệt</a>
-                }
+                <div class="mt-3 d-flex justify-content-between px-3">
+                    <a href="/OrderManage" class="btn btn-secondary">← Quay lại</a>
+
+                    @if (!ViewBag.IsProcessed)
+                    {
+                        <a href="/OrderManage/Processed/@Request.Params["ID"]" class="btn btn-primary">Duyệt</a>
+                    }
+                </div>
             </div>
             <!-- /.card-body -->
         </div>

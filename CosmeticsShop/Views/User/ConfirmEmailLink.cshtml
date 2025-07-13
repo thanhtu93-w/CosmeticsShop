@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "ConfirmEmailLink";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
 }
@@ -12,10 +11,16 @@
         </ol>
     </div>
 </div>
+
 <div class="container">
-    <div class="register">
+    <div class="register text-center">
         <h2>Xác minh tài khoản</h2>
         <h4>@ViewBag.Email</h4>
         <h4>@ViewBag.Message</h4>
+
+        <br />
+        <a href="/" class="btn btn-primary">
+            <span class="glyphicon glyphicon-arrow-left"></span> Quay lại trang chủ
+        </a>
     </div>
 </div>

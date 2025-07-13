@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace CosmeticsShop.Controllers
 {
-    public class CartController : Controller
+    public class CartController : BaseController
     {
         ShoppingEntities db = new ShoppingEntities();
         [HttpPost]
@@ -21,14 +21,14 @@ namespace CosmeticsShop.Controllers
                 Session["Cart"] = new List<ItemCart>();
             }
             List<ItemCart> itemCarts = Session["Cart"] as List<ItemCart>;
-            // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
+            
             ItemCart check = itemCarts.FirstOrDefault(x => x.ProductID == ProductID);
-            // Kiểm tra số lượng tồn
+            
             if (itemCarts.Count > 0 && check!= null && product.Quantity <= check.Quantity)
             {
                 return Json(new { status = false }, JsonRequestBehavior.AllowGet);
             }
-            // Nếu tồn tại thì + số lượng lên 1
+           
             if (check != null)
             {
                 for (int i = 0; i < itemCarts.Count; i++)
@@ -39,7 +39,7 @@ namespace CosmeticsShop.Controllers
                     }
                 }
             }
-            else // Nếu chưa thì thêm mới sản phẩm vào giỏ hàng
+            else 
             {
                 itemCarts.Add(new ItemCart() { ProductID = product.ID, ProductName = product.Name, ProductPrice = product.Price.Value, ProductImage = product.Image1, Quantity = 1 });
             }
@@ -58,7 +58,7 @@ namespace CosmeticsShop.Controllers
             List<ItemCart> itemCarts = Session["Cart"] as List<ItemCart>;
             if (Quantity > 0)
             {
-                // Kiểm tra số lượng tồn
+                
                 Product product = db.Products.SingleOrDefault(x => x.ID == ProductID);
                 if (itemCarts.Count > 0 && product.Quantity <= Quantity)
                 {
@@ -109,6 +109,13 @@ namespace CosmeticsShop.Controllers
         public ActionResult AddOrder(string payment = "")
         {
             Models.User user = Session["User"] as Models.User;
+            List<ItemCart> listCart = Session["Cart"] as List<ItemCart>;
+
+            if (listCart == null || listCart.Count == 0)
+            {
+                return RedirectToAction("Message", new { mess = "Giỏ hàng đang rỗng!" });
+            }
+
             //Add order
             Models.Order order = new Models.Order();
             order.DateOrder = DateTime.Now;
@@ -120,8 +127,8 @@ namespace CosmeticsShop.Controllers
             db.SaveChanges();
             int o = db.Orders.OrderByDescending(p => p.ID).FirstOrDefault().ID;
             Session["OrderId"] = o;
+
             //Add order detail
-            List<ItemCart> listCart = Session["Cart"] as List<ItemCart>;
             foreach (ItemCart item in listCart)
             {
                 OrderDetail orderDetail = new OrderDetail();
@@ -134,6 +141,7 @@ namespace CosmeticsShop.Controllers
                 db.OrderDetails.Add(orderDetail);
             }
             db.SaveChanges();
+
             // Payment
             if (payment == "paypal")
             {
@@ -143,7 +151,8 @@ namespace CosmeticsShop.Controllers
             {
                 return RedirectToAction("PaymentWithMomo", "Payment");
             }
-            SentMail("Đặt hàng thành công", user.Email, "hoahuongduong05124@gmail.com", "ytotxwzbrwkoddjd", "<p style=\"font-size:20px\">Cảm ơn bạn đã đặt hàng<br/>Mã đơn hàng của bạn là: " + order.ID);
+
+            SentMail("Đặt hàng thành công", user.Email, "taurenth@gmail.com", "gveywvjinnhifxfc", "<p style=\"font-size:20px\">Cảm ơn bạn đã đặt hàng<br/>Mã đơn hàng của bạn là: " + order.ID);
 
             Session.Remove("Cart");
             Session.Remove("OrderID");
@@ -169,6 +178,19 @@ namespace CosmeticsShop.Controllers
         {
             ViewBag.Message = mess;
             return View();
+        }
+        [HttpPost]
+        public JsonResult RemoveItem(int ProductID)
+        {
+            List<ItemCart> itemCarts = Session["Cart"] as List<ItemCart>;
+            var item = itemCarts.FirstOrDefault(x => x.ProductID == ProductID);
+            if (item != null)
+            {
+                itemCarts.Remove(item);
+                Session["Cart"] = itemCarts;
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
     }
 }

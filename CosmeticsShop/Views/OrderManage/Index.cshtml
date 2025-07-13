@@ -47,6 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th>Người đặt</th>
+                                        <th>Địa chỉ</th>
                                         <th>ID</th>
                                         <th>Ngày đặt</th>
                                         <th>Thanh toán</th>
@@ -61,6 +62,7 @@
                                         {
                                             <tr>
                                                 <td>@item.User.Name</td>
+                                                <td>@item.User.Address</td>
                                                 <td>@item.ID</td>
                                                 <td>@item.DateOrder.Value.ToString("dd/MM/yyyy")</td>
                                                 @if (item.IsPaid.Value)

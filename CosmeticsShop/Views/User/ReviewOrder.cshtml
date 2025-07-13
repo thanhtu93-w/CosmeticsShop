@@ -1,0 +1,89 @@
+﻿@model List<CosmeticsShop.Models.OrderDetail>
+@{
+    ViewBag.Title = "Đánh giá sản phẩm";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    int orderId = ViewBag.OrderID;
+    var reviewDict = ViewBag.ProductReviews as Dictionary<int, CosmeticsShop.Models.ProductReview>;
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success text-center" style="margin-bottom: 20px;">
+        @TempData["Message"]
+    </div>
+}
+<div class="breadcrumbs" style="height: 130px; display: flex; align-items: center;">
+    <div class="container">
+        <ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+            <li><a href="/"><span class="glyphicon glyphicon-home"></span>Trang chủ</a></li>
+            <li class="active">Đánh giá</li>
+        </ol>
+    </div>
+</div>
+
+<div class="products">
+    <div class="container">
+        <h2>Đánh giá sản phẩm</h2>
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th style="width: 150px;">Số sao</th>
+                    <th>Bình luận</th>
+                    <th style="width: 120px;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var productId = item.ProductID ?? 0;
+                    var review = reviewDict != null && reviewDict.ContainsKey(productId)
+                        ? reviewDict[productId]
+                        : null;
+                    <tr>
+                        @using (Html.BeginForm("SubmitReviewSingle", "User", FormMethod.Post, new { @class = "form-inline", role = "form", style = "margin: 0;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("OrderID", orderId)
+                            @Html.Hidden("ProductID", item.ProductID)
+
+                            <td>
+                                <img src="~/Content/images/@item.Product.Image1" alt="@item.Product.Name" class="img-thumbnail" style="max-width: 80px;" />
+                            </td>
+                            <td>
+                                <strong>@item.Product.Name</strong><br />
+                                SL: @item.Quantity
+                                @if (review != null)
+                                {
+                                    <span class="label label-info">Đã đánh giá</span>
+                                }
+                            </td>
+                            <td>
+                                <select class="form-control" name="Rating" required>
+                                    <option value="">Chọn</option>
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <option value="@i" @(review?.Rating == i ? "selected" : "")>@i sao</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <textarea name="Comment" rows="2" class="form-control" placeholder="Nhận xét..." required>@(review?.Comment)</textarea>
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    @(review != null ? "Cập nhật" : "Gửi")
+                                </button>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <a href="@Url.Action("CheckoutOrder", "User")" class="btn btn-default">Quay lại</a>
+        </div>
+    </div>
+</div>

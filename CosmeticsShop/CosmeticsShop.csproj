@@ -2367,6 +2367,9 @@
     <Content Include="Views\Statistic\Index.cshtml" />
     <Content Include="Views\ProductManage\Add.cshtml" />
     <Content Include="Views\CategoryManage\Add.cshtml" />
+    <Content Include="Views\User\Favorites.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\User\ReviewOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

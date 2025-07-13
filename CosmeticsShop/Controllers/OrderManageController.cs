@@ -31,23 +31,31 @@ namespace CosmeticsShop.Controllers
             {
                 return RedirectToAction("Index", "Admin");
             }
+
             List<Order> orders = db.Orders.Include("User").ToList();
             return View(orders);
         }
-        public ActionResult Details(int ID)
+        public ActionResult Details(int? ID)
         {
-            if (CheckRole("Admin"))
-            {
-
-            }
-            else
-            {
+            if (!CheckRole("Admin"))
                 return RedirectToAction("Index", "Admin");
-            }
-            ViewBag.IsProcessed = (db.Orders.Find(ID).Status == "Processing") ? false : true;
-            List<OrderDetail> orderDetails = db.OrderDetails.Where(x => x.OrderID.Value == ID).ToList();
+
+            if (ID == null)
+                return RedirectToAction("SignIn", "Home"); // Chuyển về trang đăng nhập nếu ID null
+
+            var order = db.Orders.Find(ID.Value);
+            if (order == null)
+                return HttpNotFound(); // Trường hợp không tìm thấy đơn hàng
+
+            ViewBag.IsProcessed = order.Status != "Processing";
+
+            List<OrderDetail> orderDetails = db.OrderDetails
+                .Where(x => x.OrderID == ID.Value)
+                .ToList();
+
             return View(orderDetails);
         }
+
         public ActionResult Processed(int ID)
         {
             Order order = db.Orders.Find(ID);

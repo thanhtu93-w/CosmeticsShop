@@ -21,8 +21,10 @@ namespace CosmeticsShop.Models
         public string Comment { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<bool> IsApproved { get; set; }
+        public Nullable<int> OrderID { get; set; }
     
         public virtual Product Product { get; set; }
         public virtual User User { get; set; }
+        public virtual Order Order { get; set; }
     }
 }

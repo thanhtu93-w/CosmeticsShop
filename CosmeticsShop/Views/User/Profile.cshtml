@@ -1,0 +1,79 @@
+﻿@model CosmeticsShop.Models.User
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="breadcrumbs" style="height: 130px; display: flex; align-items: center;">
+    <div class="container">
+        <ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+            <li><a href="/"><span class="glyphicon glyphicon-home"></span>Trang chủ</a></li>
+            <li class="active">Trang thông tin</li>
+        </ol>
+    </div>
+</div>
+
+<div class="products">
+    <div class="container">
+        <h2>Thông tin cá nhân</h2>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info">@TempData["Message"]</div>
+        }
+
+        @if (!string.IsNullOrEmpty(ViewBag.Message as string))
+        {
+            <div class="alert alert-success">@ViewBag.Message</div>
+        }
+
+        @if (!Model.IsConfirm.HasValue || Model.IsConfirm == false)
+        {
+            <div class="alert alert-warning">
+                Email của bạn <strong>@Model.Email</strong> chưa được xác minh.
+                <form method="post" action="/User/ResendVerification" style="display: inline;">
+                    <input type="submit" value="Xác minh ngay" class="btn btn-sm btn-primary" />
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success">
+                Email <strong>@Model.Email</strong> đã được xác minh.
+            </div>
+        }
+
+        <form method="post" action="/User/Profile" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Ảnh đại diện</label><br />
+                @if (!string.IsNullOrEmpty(Model.Avatar))
+                {
+                    <img src="~/Content/images/@Model.Avatar" alt="Avatar" style="max-height: 120px; border-radius: 10px; margin-bottom: 10px;" />
+                }
+                else
+                {
+                    <p style="color: gray;">Chưa có ảnh đại diện</p>
+                }
+                <input type="file" name="AvatarFile" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Họ tên</label>
+                <input type="text" name="Name" class="form-control" value="@Model.Name" required />
+            </div>
+            <div class="form-group">
+                <label>Email (không thể thay đổi)</label>
+                <input type="email" class="form-control" value="@Model.Email" disabled />
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="text" name="Phone" class="form-control" value="@Model.Phone.Trim()" />
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ</label>
+                <input type="text" name="Address" class="form-control" value="@Model.Address" />
+            </div>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </form>
+    </div>
+</div>
